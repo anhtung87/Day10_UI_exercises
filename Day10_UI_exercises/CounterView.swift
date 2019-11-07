@@ -11,7 +11,9 @@ import UIKit
 @IBDesignable
 class CounterView: UIView {
     
+    // gom các hằng số thành 1 struct duy nhất, thuận tiện cho việc quản lý biến.
     private struct Constants {
+        // số phần chia của vòng tròn
         static let numberOfGlasses = 8
         static let lineWidth: CGFloat = 5.0
         static let arcWidth: CGFloat = 76
@@ -21,6 +23,7 @@ class CounterView: UIView {
         }
     }
     
+    // biến số đếm số lượng phần chia vòng tròn sẽ được xuất hiện trên screen
     @IBInspectable var counter: Int = 6 {
         didSet {
             if counter <= Constants.numberOfGlasses {
@@ -37,10 +40,24 @@ class CounterView: UIView {
 
     override func draw(_ rect: CGRect) {
         let center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
-        
         let radius: CGFloat = max(bounds.width, bounds.height)
         
-        let path = startAngle != endAngle ? UIBezierPath(arcCenter: center, radius: radius/2 - Constants.arcWidth/2, startAngle: startAngle, endAngle: endAngle, clockwise: true) : UIBezierPath(ovalIn: CGRect(x: Constants.arcWidth/2, y: Constants.arcWidth/2, width: radius - Constants.arcWidth, height: radius - Constants.arcWidth))
+        let arc = UIBezierPath(
+            arcCenter: center,
+            radius: radius/2 - Constants.arcWidth/2,
+            startAngle: startAngle,
+            endAngle: endAngle,
+            clockwise: true
+        )
+        let circle = UIBezierPath(
+            ovalIn: CGRect(
+                x: Constants.arcWidth/2,
+                y: Constants.arcWidth/2,
+                width: radius - Constants.arcWidth,
+                height: radius - Constants.arcWidth
+            )
+        )
+        let path = startAngle != endAngle ? arc : circle
         
         path.lineWidth = Constants.arcWidth
         counterColor.setStroke()
